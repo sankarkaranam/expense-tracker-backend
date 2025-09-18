@@ -1,24 +1,22 @@
 # app/main.py
 from fastapi import FastAPI
-from app.routers import health, welcome   # import our router modules
+from app.routers import health, welcome
+from app.db import Base, engine
+
+# Create all tables (if not exists)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Expense Tracker API",
-    version="0.1",
-    description="Day 2 - modular structure with routers and a health check."
+    version="0.2",
+    description="Day 3 - Database setup with SQLAlchemy ORM"
 )
-
-# Root route (simple)
 
 
 @app.get("/")
 def read_root():
-    """
-    Root endpoint. Quick status for manual testing.
-    """
-    return {"message": "Hello, Expense Tracker is live!"}
+    return {"message": "Expense Tracker with DB is live!"}
 
 
-# Include routers from separate modules
-app.include_router(health.router)                 # adds /health
+app.include_router(health.router)
 app.include_router(welcome.router, prefix="/welcome", tags=["welcome"])
